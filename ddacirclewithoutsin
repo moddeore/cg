@@ -1,0 +1,57 @@
+#include<iostream>
+#include<GL/glut.h>
+#include<cmath>
+using namespace std;
+void drawpixel(int xc, int yc, int x, int y)
+{
+    glBegin(GL_POINTS);
+    glVertex2i(xc+x,yc+y);
+    glVertex2i(xc+x,yc-y);
+    glVertex2i(xc-x,yc+y);
+    glVertex2i(xc-x,yc-y);
+    glVertex2i(xc+y,yc+x);
+    glVertex2i(xc+y,yc-x);
+    glVertex2i(xc-y,yc+x);
+    glVertex2i(xc-y,yc-x);
+    glEnd();
+}
+
+void drawcircle(int xc, int yc, int r)
+{
+    int x=0;
+    int y=r;
+    float step=1.0f/r;
+    while(x<=y)
+    {
+        drawpixel(xc,yc,x,y);
+        x+=(step*r);
+        y=sqrt((r*r)-(x*x));
+    }
+    glFlush();
+}
+void myinit()
+{
+    glClearColor(0,0,0,1);
+    glColor3f(1,1,1);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,640,0,500,-1,1);
+}
+void display(){
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1,1,1);
+    drawcircle(300,250,125);
+    glFlush();
+}
+int main(int argc, char **argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+    glutInitWindowSize(640,500);
+    glutInitWindowPosition(100,100);
+    glutCreateWindow("dda circle algorithm");
+    myinit();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}
